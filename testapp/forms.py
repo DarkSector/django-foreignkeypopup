@@ -33,25 +33,32 @@ class CustomSelectWidget(forms.Select):
         return css, js
 
     def _media(self):
-        _css, _js = self._set_default_media()
+        """
+        .. seealso::https://docs.djangoproject.com/en/1.8/topics/forms/media/#media-as-a-dynamic-property
+        """
+        css, js = self._set_default_media()
         if 'js' in self.attrs:
-            return None
+            js = self.attrs['js']
         if 'css' in self.attrs:
-            return None
+            css = self.attrs['css']
+        return forms.Media(css=css, js=js)
 
     media = property(_media)
 
 
 class CustomModelChoiceField(forms.ModelChoiceField):
-    
+    """
+
+    """
     def __init__(self, *args, **kwargs):
         class_name = kwargs.pop('class_name', None)
         js = kwargs.pop('js', None)
         css = kwargs.pop('css', None)
+        type_error_message = "js needs to be of type %s. See https://docs.djangoproject.com/en/1.8/topics/forms/media/"
         if not isinstance(js, tuple):
-            raise TypeError("js needs to be of type tuple")
-        if not isinstance(css, list):
-            raise TypeError("css needs to be of type list")
+            raise TypeError(type_error_message % 'tuple')
+        if not isinstance(css, dict):
+            raise TypeError(type_error_message % 'dict')
         if not isinstance(class_name, str):
             raise TypeError("class_name needs to be of type str")
         super(CustomModelChoiceField, self).__init__(*args, **kwargs)
