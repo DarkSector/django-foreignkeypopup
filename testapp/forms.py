@@ -17,7 +17,11 @@ class CustomSelectWidget(forms.Select):
 class CustomModelChoiceField(forms.ModelChoiceField):
     
     def __init__(self, *args, **kwargs):
+        class_name = kwargs.pop('class_name', None)
+        js = kwargs.pop('js', None)
+        css = kwargs.pop('css', None)
         super(CustomModelChoiceField, self).__init__(*args, **kwargs)
+        self.widget = CustomSelectWidget({'class_name': class_name, 'js': js, 'css': css})
 
 
 class ChildForm(forms.ModelForm):
@@ -26,7 +30,7 @@ class ChildForm(forms.ModelForm):
         exclude = ('',)
         model = ChildClass
 
-    parent = forms.ModelChoiceField(queryset=ParentModel.objects.all(), widget=CustomSelectWidget())
+    parent = CustomModelChoiceField(queryset=ParentModel.objects.all(), class_name='', js='', css='')
 
     def __init__(self, *args, **kwargs):
         super(ChildForm, self).__init__(*args, **kwargs)
