@@ -1,4 +1,5 @@
 from django import forms
+from django.core.urlresolvers import reverse_lazy
 from models import ParentModel, ChildClass
 
 
@@ -51,6 +52,7 @@ class CustomModelChoiceField(forms.ModelChoiceField):
 
     """
     def __init__(self, *args, **kwargs):
+        url = kwargs.pop('url', None)
         class_name = kwargs.pop('class_name', None)
         js = kwargs.pop('js', None)
         css = kwargs.pop('css', None)
@@ -61,8 +63,10 @@ class CustomModelChoiceField(forms.ModelChoiceField):
             raise TypeError(type_error_message % 'dict')
         if class_name and not isinstance(class_name, str):
             raise TypeError("class_name needs to be of type str")
+        if url is None:
+            raise NotImplementedError("URL is required")
         super(CustomModelChoiceField, self).__init__(*args, **kwargs)
-        self.widget = CustomSelectWidget({'class_name': class_name, 'js': js, 'css': css})
+        self.widget = CustomSelectWidget({'class_name': class_name, 'js': js, 'css': css, 'data-url': url})
 
 
 class ChildForm(forms.ModelForm):
@@ -71,7 +75,7 @@ class ChildForm(forms.ModelForm):
         exclude = ('',)
         model = ChildClass
 
-    parent = CustomModelChoiceField(queryset=ParentModel.objects.all())
+    parent = CustomModelChoiceField(queryset=ParentModel.objects.all(), url=reverse_lazy('parent_create_view'))
 
     def __init__(self, *args, **kwargs):
         super(ChildForm, self).__init__(*args, **kwargs)
