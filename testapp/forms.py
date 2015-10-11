@@ -7,11 +7,9 @@ class CustomSelectWidget(forms.Select):
     def __init__(self, *args, **kwargs):
         super(CustomSelectWidget, self).__init__(*args, **kwargs)
         if self.attrs:
-            if not 'class_name' in self.attrs:
+            _class = self.attrs.pop('class_name', None)
+            if _class is None:
                 self.attrs['class'] = 'fk-popup'
-            else:
-                self.attrs['class'] = self.attrs['class_name']
-                self.attrs.pop('class_name', None)
 
     def _set_default_media(self):
         """
@@ -36,11 +34,13 @@ class CustomSelectWidget(forms.Select):
         """
         .. seealso::https://docs.djangoproject.com/en/1.8/topics/forms/media/#media-as-a-dynamic-property
         """
-        css, js = self._set_default_media()
-        if 'js' in self.attrs:
-            js = self.attrs['js']
-        if 'css' in self.attrs:
-            css = self.attrs['css']
+        _css, _js = self._set_default_media()
+        css = self.attrs.pop('css', None)
+        js = self.attrs.pop('js', None)
+        if css is None:
+            css = _css
+        if js is None:
+            js = _js
         return forms.Media(css=css, js=js)
 
     media = property(_media)
@@ -55,11 +55,11 @@ class CustomModelChoiceField(forms.ModelChoiceField):
         js = kwargs.pop('js', None)
         css = kwargs.pop('css', None)
         type_error_message = "js needs to be of type %s. See https://docs.djangoproject.com/en/1.8/topics/forms/media/"
-        if not isinstance(js, tuple):
+        if js and not isinstance(js, tuple):
             raise TypeError(type_error_message % 'tuple')
-        if not isinstance(css, dict):
+        if css and not isinstance(css, dict):
             raise TypeError(type_error_message % 'dict')
-        if not isinstance(class_name, str):
+        if class_name and not isinstance(class_name, str):
             raise TypeError("class_name needs to be of type str")
         super(CustomModelChoiceField, self).__init__(*args, **kwargs)
         self.widget = CustomSelectWidget({'class_name': class_name, 'js': js, 'css': css})
