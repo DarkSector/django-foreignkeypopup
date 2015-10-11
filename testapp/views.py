@@ -1,7 +1,6 @@
 from django.views.generic import CreateView, UpdateView, ListView
 from django.core.urlresolvers import reverse_lazy
 from models import ParentModel, ChildClass
-from forms import ChildForm
 
 
 # Create your views here.
@@ -12,6 +11,7 @@ class ParentCreateView(CreateView):
 
 
 class ChildCreateView(CreateView):
+    from forms import ChildForm
     model = ChildClass
     template_name = 'child_create_view.html'
     form_class = ChildForm
