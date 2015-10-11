@@ -39,7 +39,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'testapp',
     # 'debug_toolbar',
-    'djmoney'
 )
 
 MIDDLEWARE_CLASSES = (
