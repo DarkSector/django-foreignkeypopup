@@ -8,7 +8,7 @@ class CustomSelectWidget(forms.Select):
         css = {
             'all': ('css/pretty.css',)
         }
-        js = ('https://code.jquery.com/jquery-1.11.3.min.js', 'js/selectfield.js')
+        js = ('https://code.jquery.com/jquery-1.11.3.min.js', 'js/default.js')
 
     def __init__(self, *args, **kwargs):
         super(CustomSelectWidget, self).__init__(*args, **kwargs)
