@@ -21,4 +21,3 @@ class ChildCreateView(CreateView):
 class ChildListView(ListView):
     model = ChildClass
     template_name = 'child_list_view.html'
-
