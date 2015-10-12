@@ -1,4 +1,6 @@
 $(document).ready(function () {
+    /******* Some global variables declared in limited scope ******/
+    var host = window.location.protocol + '//' + window.location.hostname + (location.port ? ':'+location.port: '');
     var current_id;
     var a_id;
     var data_url;
@@ -11,5 +13,10 @@ $(document).ready(function () {
     $(".fk-popup-btn").on("click", function(){
         // Any time the button gets triggered
         // open a new window and go to the link
+        var childWin = window.open(host+$(this).attr('data-url'), '_blank', "toolbar=no, location=no, addressbar=no");
     });
+
+    function addScript(jsFileNameWithPath){
+
+    }
 });
